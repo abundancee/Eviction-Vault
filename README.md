@@ -11,18 +11,25 @@ Refactored from a single-file contract into a modular structure with immediate s
 ## Critical Fixes Implemented
 
 - `setMerkleRoot` is no longer publicly callable.
-	- It is now governance-only (`onlyVault`) and must be executed through threshold confirmations and timelock.
+
+	-- It is now governance-only (`onlyVault`) and must be executed through threshold confirmations and timelock.
 - `emergencyWithdrawAll` public drain removed.
-	- It is governance-only, requires paused state, and requires a non-zero recipient.
+	
+	-- It is governance-only, requires paused state, and requires a non-zero recipient.
 - `pause/unpause` single-owner control removed.
-	- Both actions are governance-only (`onlyVault`) through multisig + timelock execution.
+	
+	-- Both actions are governance-only (`onlyVault`) through multisig + timelock execution.
 - `receive()` no longer uses `tx.origin`.
-	- Deposits now credit `msg.sender`.
+	
+	-- Deposits now credit `msg.sender`.
 - `withdraw` and `claim` no longer use `.transfer`.
-	- Both use safe low-level `.call` and are protected with `ReentrancyGuard`.
+	
+	-- Both use safe low-level `.call` and are protected with `ReentrancyGuard`.
 - Timelock execution strengthened.
-	- `executionTime` is correctly set when threshold is reached, including threshold-on-submit cases.
-	- Execution requires non-zero `executionTime` and enforces delay.
+	
+	-- `executionTime` is correctly set when threshold is reached, including threshold-on-submit cases.
+	
+	-- Execution requires non-zero `executionTime` and enforces delay.
 
 ## Test Coverage
 
