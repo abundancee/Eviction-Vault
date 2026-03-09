@@ -32,17 +32,29 @@ abstract contract VaultStorage {
     event Unpaused();
 
     modifier onlyOwner() {
-        require(isOwner[msg.sender], "not owner");
+        _onlyOwner();
         _;
     }
 
     modifier onlyVault() {
-        require(msg.sender == address(this), "only vault");
+        _onlyVault();
         _;
     }
 
     modifier whenNotPaused() {
-        require(!paused, "paused");
+        _whenNotPaused();
         _;
+    }
+
+    function _onlyOwner() internal view {
+        require(isOwner[msg.sender], "not owner");
+    }
+
+    function _onlyVault() internal view {
+        require(msg.sender == address(this), "only vault");
+    }
+
+    function _whenNotPaused() internal view {
+        require(!paused, "paused");
     }
 }

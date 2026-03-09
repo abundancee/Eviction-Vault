@@ -101,7 +101,13 @@ contract EvictionVault is VaultStorage, ReentrancyGuard {
 
     function claim(bytes32[] calldata proof, uint256 amount) external whenNotPaused nonReentrant {
         require(!claimed[msg.sender], "already claimed");
-        bytes32 leaf = keccak256(abi.encodePacked(msg.sender, amount));
+        bytes32 leaf;
+        assembly {
+            let ptr := mload(0x40)
+            mstore(ptr, shl(96, caller()))
+            mstore(add(ptr, 20), amount)
+            leaf := keccak256(ptr, 52)
+        }
         bytes32 computed = MerkleProof.processProof(proof, leaf);
         require(computed == merkleRoot, "invalid proof");
         claimed[msg.sender] = true;
